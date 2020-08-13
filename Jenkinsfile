@@ -22,7 +22,6 @@ pipeline {
         docker {
           image 'xitric/ca-project-test:latest'
         }
-
       }
       options {
         skipDefaultCheckout(true)
@@ -39,22 +38,40 @@ pipeline {
       }
       parallel {
         stage('create artifact') {
+          agent {
+            docker {
+              image 'xitric/ca-project-zip:latest'
+            }
+          }
           steps {
             unstash 'code'
-            sh 'sh \'ci/create_artifact.sh\''
-            archiveArtifacts 'app.tar.gz'
+            sh 'ci/create_artifact.sh'
+            archiveArtifacts 'app.zip'
           }
         }
 
         stage('dockerize application') {
+          when {
+            branch 'master'
+          }
           steps {
             unstash 'code'
-            sh 'sh \'ci/build_docker.sh\''
+            sh 'ci/build_docker.sh'
           }
         }
-
       }
     }
-
+    
+    stage('Publish DockerHub') {
+      when {
+        branch 'master'
+      }
+      environment {
+        DOCKERCREDS = credentials('docker_creds')
+      }
+      steps {
+        sh 'ci/publish_docker.sh'
+      }
+    }
   }
 }
