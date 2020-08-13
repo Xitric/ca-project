@@ -11,7 +11,7 @@ pipeline {
       steps {
         unstash 'code'
         sh 'tar -zcvf archive.tar.gz app/'
-        archiveArtifacts 'app/'
+        archiveArtifacts 'app.tar.gz'
       }
     }
 
