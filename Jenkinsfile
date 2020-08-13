@@ -10,7 +10,7 @@ pipeline {
     stage('create artifact') {
       steps {
         unstash 'code'
-        sh 'gzip -r app'
+        sh 'zip -r app.zip app/'
         archiveArtifacts 'app/'
       }
     }
