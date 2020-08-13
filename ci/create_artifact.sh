@@ -1,2 +1,2 @@
 #! /bin/bash
-zip -r app.zip app/
+zip -r app.zip . -x .git
