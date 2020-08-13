@@ -67,6 +67,9 @@ pipeline {
           branch pattern: "dev/.+", comparator: "REGEXP"
         }
       }
+      options {
+        skipDefaultCheckout(true)
+      }
       steps {
         sh 'ci/package_test.sh'
         sshagent(credentials: ['ssh_production']) {
@@ -78,6 +81,9 @@ pipeline {
     stage('Publish DockerHub') {
       when {
         branch 'master'
+      }
+      options {
+        skipDefaultCheckout(true)
       }
       environment {
         DOCKERCREDS = credentials('docker_creds')
@@ -91,11 +97,20 @@ pipeline {
       when {
         branch 'master'
       }
+      options {
+        skipDefaultCheckout(true)
+      }
 	    steps {
 	      sshagent(credentials: ['ssh_production']) {
 		      sh 'ci/deploy_production.sh'
 		    }
 	    }
 	  }
+  }
+
+  post {
+    always {
+        deleteDir()
+    }
   }
 }
