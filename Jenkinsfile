@@ -1,8 +1,3 @@
-def remote = [:]
-remote.name = "production"
-remote.host = "35.195.148.16"
-remote.allowAnyHosts = true
-
 pipeline {
   agent any
   stages {
@@ -56,13 +51,25 @@ pipeline {
         }
 
         stage('dockerize application') {
-          when {
-            branch 'master'
-          }
           steps {
             unstash 'code'
             sh 'ci/build_docker.sh'
           }
+        }
+      }
+    }
+
+    stage('Deploy test server') {
+      when {
+        anyOf {
+          changeRequest()
+          branch pattern: "dev/.+", comparator: "REGEXP"
+        }
+      }
+      steps {
+        sh 'ci/package_test.sh'
+        sshagent(credentials: ['ssh_production']) {
+          sh 'ci/deploy_test.sh'
         }
       }
     }
