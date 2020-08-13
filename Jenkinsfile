@@ -27,5 +27,12 @@ pipeline {
       }
     }
 
+    stage('unit test') {
+      steps {
+        sh 'sh \'ci/test_app.sh\''
+        junit 'app/build/test-results/test/TEST-*.xml'
+      }
+    }
+
   }
 }
