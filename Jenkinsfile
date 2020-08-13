@@ -7,6 +7,17 @@ pipeline {
       }
     }
 
+    stage('unit test') {
+      agent {
+        docker {
+          image 'xitric/ca-project-python:latest'
+        }
+      }
+      steps {
+        junit 'app/build/test-results/test/TEST-*.xml'
+      }
+    }
+
     stage('create artifact') {
       parallel {
         stage('create artifact') {
@@ -24,19 +35,6 @@ pipeline {
           }
         }
 
-      }
-    }
-
-    stage('unit test') {
-      agent {
-        docker {
-          image 'xitric/ca-project-python:latest'
-          args 'tests.py'
-        }
-
-      }
-      steps {
-        junit 'app/build/test-results/test/TEST-*.xml'
       }
     }
 
