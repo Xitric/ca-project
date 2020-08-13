@@ -11,7 +11,7 @@ pipeline {
       steps {
         unstash 'code'
         sh 'gzip -r app'
-        archiveArtifacts 'app.zip'
+        archiveArtifacts 'app/'
       }
     }
 
