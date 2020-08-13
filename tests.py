@@ -9,6 +9,7 @@
 
 import os
 import unittest
+import xmlrunner
 from datetime import datetime
 from config import basedir
 from app import app, db
@@ -48,4 +49,7 @@ class TestCase(unittest.TestCase):
         self.assertEqual(number_of_posts,1)
 
 if __name__ == '__main__':
-    unittest.main()
+    out = io.BytesIO()
+    unittest.main(
+        testRunner=xmlrunner.XMLTestRunner(output='test-reports'),
+        failfast=False, buffer=False, catchbreak=False, exit=False)
