@@ -34,11 +34,11 @@ pipeline {
     }
 
     stage('create artifact') {
-      options {
-        skipDefaultCheckout(true)
-      }
       parallel {
         stage('create artifact') {
+          options {
+            skipDefaultCheckout(true)
+          }
           agent {
             docker {
               image 'xitric/ca-project-zip:latest'
@@ -52,6 +52,9 @@ pipeline {
         }
 
         stage('dockerize application') {
+          options {
+            skipDefaultCheckout(true)
+          }
           steps {
             unstash 'code'
             sh 'ci/build_docker.sh'
