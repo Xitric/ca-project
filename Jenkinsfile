@@ -8,10 +8,22 @@ pipeline {
     }
 
     stage('create artifact') {
-      steps {
-        unstash 'code'
-        sh 'tar -zcvf app.tar.gz app/'
-        archiveArtifacts 'app.tar.gz'
+      parallel {
+        stage('create artifact') {
+          steps {
+            unstash 'code'
+            sh 'sh \'ci/create_artifact.sh\''
+            archiveArtifacts 'app.tar.gz'
+          }
+        }
+
+        stage('dockerize application') {
+          steps {
+            unstash 'code'
+            sh 'sh \'ci/build_docker.sh\''
+          }
+        }
+
       }
     }
 
