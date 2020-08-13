@@ -31,11 +31,11 @@ pipeline {
       agent {
         docker {
           image 'xitric/ca-project-python'
-          args 'tests.py'
         }
 
       }
       steps {
+        sh 'sh \'ci/test_app.sh\''
         junit 'app/build/test-results/test/TEST-*.xml'
       }
     }
