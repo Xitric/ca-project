@@ -3,6 +3,6 @@ flask_sqlalchemy
 flask_wtf
 wtforms
 datetime
-migrate
+sqlalchemy-migrate
 sqlalchemy
 config
