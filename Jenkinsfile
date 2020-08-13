@@ -75,6 +75,7 @@ pipeline {
         sshagent(credentials: ['ssh_production']) {
           sh 'ci/deploy_test.sh'
         }
+        sh 'ci/test_functional.sh'
       }
     }
     
