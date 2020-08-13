@@ -1,0 +1,1 @@
+tar -zcvf app.tar.gz app/
