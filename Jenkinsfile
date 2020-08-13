@@ -29,6 +29,7 @@ pipeline {
       steps {
         unstash 'code'
         sh 'ci/test_app.sh'
+        junit 'test-reports/TEST-*.xml'
       }
     }
 
