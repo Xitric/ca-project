@@ -1,0 +1,10 @@
+version: "3.5"
+
+services:
+    app_environment:
+        image: xitric/ca-project-python
+        container_name: app_environment
+        ports:
+          - 80:5000
+        volumes:
+          - /home/ubuntu/ca-project/app.db:/app.db
