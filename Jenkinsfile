@@ -30,7 +30,6 @@ pipeline {
       steps {
         unstash 'code'
         sh 'ci/test_app.sh'
-        junit 'app/build/test-results/test/TEST-*.xml'
       }
     }
 
