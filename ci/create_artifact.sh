@@ -1,2 +1,2 @@
 #! /bin/bash
-tar -zcvf app.tar.gz app/
+zip -r app.zip app/
