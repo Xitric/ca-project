@@ -10,7 +10,7 @@ pipeline {
     stage('create artifact') {
       steps {
         unstash 'code'
-        sh 'tar -zcvf archive.tar.gz app/'
+        sh 'tar -zcvf app.tar.gz app/'
         archiveArtifacts 'app.tar.gz'
       }
     }
