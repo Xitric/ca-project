@@ -1,8 +1,3 @@
-def remote = [:]
-remote.name = "production"
-remote.host = "35.195.148.16"
-remote.allowAnyHosts = true
-
 pipeline {
   agent any
   stages {
@@ -56,13 +51,28 @@ pipeline {
         }
 
         stage('dockerize application') {
-          when {
-            branch 'master'
-          }
           steps {
             unstash 'code'
             sh 'ci/build_docker.sh'
           }
+        }
+      }
+    }
+
+    stage('Deploy test server') {
+      when {
+        anyOf {
+          changeRequest()
+          branch pattern: "dev/.+", comparator: "REGEXP"
+        }
+      }
+      steps {
+        sh 'docker save -o ca-project-test.tar xitric/ca-project-python:latest'
+        sshagent(credentials: ['ssh_production']) {
+          sh 'scp ./ca-project-test.tar ubuntu@34.76.76.30:/home/ubuntu/test/ca-project-test.tar'
+          sh 'scp ./docker-compose.yml ubuntu@34.76.76.30:/home/ubuntu/test'
+          sh 'ssh -o StrictHostKeyChecking=no ubuntu@34.76.76.30 "cd /home/ubuntu/test && docker load -i ca-project-test.tar"'
+          sh 'ssh -o StrictHostKeyChecking=no ubuntu@34.76.76.30 "cd /home/ubuntu/test && docker-compose up -d"'
         }
       }
     }
