@@ -1,0 +1,1 @@
+docker build -t xitric/ca-project-python .
