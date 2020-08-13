@@ -1,3 +1,8 @@
+def remote = [:]
+remote.name = "production"
+remote.host = "35.195.148.16"
+remote.allowAnyHosts = true
+
 pipeline {
   agent any
   stages {
@@ -73,5 +78,17 @@ pipeline {
         sh 'ci/publish_docker.sh'
       }
     }
+    
+	  stage('Deploy to production') {
+      when {
+        branch 'master'
+      }
+	    steps {
+	      sshagent(credentials: ['ssh_production']) {
+		      sh 'scp ./docker-compose.yml ubuntu@35.195.148.16:/home/ubuntu/production'
+		      sh 'ssh -o StrictHostKeyChecking=no ubuntu@35.195.148.16 "cd /home/ubuntu/production && docker-compose up -d"'
+		    }
+	    }
+	  }
   }
 }
